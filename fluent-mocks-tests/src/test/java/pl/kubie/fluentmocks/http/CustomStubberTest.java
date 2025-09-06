@@ -3,7 +3,7 @@ package pl.kubie.fluentmocks.http;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
-import pl.kubie.fluentmocks.http.api.HttoMockSpec;
+import pl.kubie.fluentmocks.http.api.HttpMockSpec;
 import pl.kubie.fluentmocks.http.api.HttpStubber;
 import pl.kubie.fluentmocks.http.junit.CustomStubber;
 
@@ -29,7 +29,7 @@ public class CustomStubberTest {
       super(httpStubber);
     }
 
-    HttoMockSpec test() {
+    HttpMockSpec test() {
       return httpStubber.stub();
     }
   }

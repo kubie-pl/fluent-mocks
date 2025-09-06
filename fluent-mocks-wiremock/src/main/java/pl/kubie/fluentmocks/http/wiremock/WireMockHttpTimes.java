@@ -21,6 +21,7 @@ import pl.kubie.fluentmocks.http.api.HttpMock;
 import pl.kubie.fluentmocks.http.api.HttpMockTimes;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @Value
 public class WireMockHttpTimes implements HttpMockTimes {
@@ -28,6 +29,7 @@ public class WireMockHttpTimes implements HttpMockTimes {
   WireMockHttpResponseSpec response;
   WireMockClient wireMock;
   WireMockStubbingReporter reporter;
+  Consumer<WireMockHttpMock> onMockCreated;
 
   @Override
   public HttpMock unlimited() {
@@ -35,13 +37,17 @@ public class WireMockHttpTimes implements HttpMockTimes {
     var responseDefinition = response.build();
     var mapping = wireMock.register(requestMapping.willReturn(responseDefinition));
     reporter.report(mapping);
-    return new WireMockHttpMock(request.requestPattern(), List.of(mapping), wireMock);
+    var mock = new WireMockHttpMock(request.requestPattern(), List.of(mapping), wireMock);
+    onMockCreated.accept(mock);
+    return mock;
   }
 
   @Override
   public HttpMock exactly(int times) {
-    return new WireMockScenarioHttpTimes(request, response, wireMock)
+    var mock = new WireMockScenarioHttpTimes(request, response, wireMock)
         .times(times);
+    onMockCreated.accept(mock);
+    return mock;
   }
 
   @Override

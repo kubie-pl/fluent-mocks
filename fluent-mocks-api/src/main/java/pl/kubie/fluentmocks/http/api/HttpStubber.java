@@ -23,13 +23,13 @@ import java.util.function.Consumer;
 
 public interface HttpStubber {
 
-  HttoMockSpec stub();
+  HttpMockSpec stub();
 
-  default HttoMockSpec with(Consumer<HttoMockSpec> onStub) {
+  default HttpMockSpec with(Consumer<HttpMockSpec> onStub) {
     return stub().with(onStub);
   }
 
-  default HttoMockSpec when(Consumer<MockHttpRequestSpec> onRequest) {
+  default HttpMockSpec when(Consumer<MockHttpRequestSpec> onRequest) {
     return stub().when(onRequest);
   }
 
@@ -37,7 +37,7 @@ public interface HttpStubber {
 
   int port();
 
-  void clearStubs();
+  void clearMocks();
 
   default String baseUrl() {
     return "http://%s:%s/".formatted(host(), port());

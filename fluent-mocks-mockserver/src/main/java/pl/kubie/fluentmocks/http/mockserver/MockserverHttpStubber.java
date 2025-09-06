@@ -18,7 +18,7 @@ package pl.kubie.fluentmocks.http.mockserver;
 
 import pl.kubie.fluentmocks.common.FileLoader;
 import pl.kubie.fluentmocks.common.JsonSerializer;
-import pl.kubie.fluentmocks.http.api.HttoMockSpec;
+import pl.kubie.fluentmocks.http.api.HttpMockSpec;
 import pl.kubie.fluentmocks.http.api.HttpStubber;
 
 import java.util.ArrayList;
@@ -39,8 +39,8 @@ public class MockserverHttpStubber implements HttpStubber {
   }
 
   @Override
-  public HttoMockSpec stub() {
-    return new MockserverHttoMockSpec(
+  public HttpMockSpec stub() {
+    return new MockserverHttpMockSpec(
         mockserverApi,
         new MockserverHttpRequestSpec(new MockserverRequestBody(fileReader, jsonSerializer)),
         new MockserverHttpResponseSpec(new MockserverResponseBody(fileReader, jsonSerializer)),
@@ -59,7 +59,7 @@ public class MockserverHttpStubber implements HttpStubber {
   }
 
   @Override
-  public void clearStubs() {
+  public void clearMocks() {
     stubs.forEach(stub -> mockserverApi.clear(stub.requestSpec.build()));
     mockserverApi.reset(); // todo it's possible bug in mockserver that it doesn't reset request logs
     stubs.clear();

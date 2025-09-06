@@ -28,7 +28,7 @@ public class StubberCleanUpExtension implements AfterEachCallback {
 
   @Override
   public void afterEach(ExtensionContext context) {
-    stubbers(context).forEach(HttpStubber::clearStubs);
+    stubbers(context).forEach(HttpStubber::clearMocks);
   }
 
   private static List<HttpStubber> stubbers(ExtensionContext context) {

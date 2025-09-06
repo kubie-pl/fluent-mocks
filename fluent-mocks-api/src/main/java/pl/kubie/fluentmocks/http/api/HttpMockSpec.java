@@ -21,9 +21,9 @@ import pl.kubie.fluentmocks.http.api.response.MockHttpResponseSpec;
 
 import java.util.function.Consumer;
 
-public interface HttoMockSpec {
+public interface HttpMockSpec {
 
-  default HttoMockSpec when(Consumer<MockHttpRequestSpec> onRequest) {
+  default HttpMockSpec when(Consumer<MockHttpRequestSpec> onRequest) {
     onRequest.accept(request());
     return this;
   }
@@ -37,7 +37,7 @@ public interface HttoMockSpec {
     return times();
   }
 
-  default HttoMockSpec with(Consumer<HttoMockSpec> onStub) {
+  default HttpMockSpec with(Consumer<HttpMockSpec> onStub) {
     onStub.accept(this);
     return this;
   }

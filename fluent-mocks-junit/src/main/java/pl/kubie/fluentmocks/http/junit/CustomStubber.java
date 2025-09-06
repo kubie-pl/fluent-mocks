@@ -30,6 +30,6 @@ public abstract class CustomStubber implements AfterEachCallback {
 
   @Override
   public void afterEach(ExtensionContext context) {
-    httpStubber.clearStubs();
+    httpStubber.clearMocks();
   }
 }

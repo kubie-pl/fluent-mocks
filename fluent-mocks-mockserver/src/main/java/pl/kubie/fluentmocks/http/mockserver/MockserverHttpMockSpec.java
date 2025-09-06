@@ -17,7 +17,7 @@
 package pl.kubie.fluentmocks.http.mockserver;
 
 import lombok.Value;
-import pl.kubie.fluentmocks.http.api.HttoMockSpec;
+import pl.kubie.fluentmocks.http.api.HttpMockSpec;
 import pl.kubie.fluentmocks.http.api.HttpMockTimes;
 import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
 import pl.kubie.fluentmocks.http.api.response.MockHttpResponseSpec;
@@ -25,7 +25,7 @@ import pl.kubie.fluentmocks.http.api.response.MockHttpResponseSpec;
 import java.util.function.Consumer;
 
 @Value
-public class MockserverHttoMockSpec implements HttoMockSpec {
+public class MockserverHttpMockSpec implements HttpMockSpec {
 
   MockserverApi mockserverApi;
   MockserverHttpRequestSpec request;

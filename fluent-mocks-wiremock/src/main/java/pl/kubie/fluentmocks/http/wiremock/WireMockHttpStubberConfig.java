@@ -47,10 +47,11 @@ public class WireMockHttpStubberConfig {
   }
 
   public WireMockHttpStubber build() {
+    var serializer = new JacksonJsonSerializer(objectMapper);
     return new WireMockHttpStubber(
-        new WireMockClient(host, port),
+        new WireMockClient(host, port, serializer),
         new FileLoader(),
-        new JacksonJsonSerializer(objectMapper)
+        serializer
     );
   }
 

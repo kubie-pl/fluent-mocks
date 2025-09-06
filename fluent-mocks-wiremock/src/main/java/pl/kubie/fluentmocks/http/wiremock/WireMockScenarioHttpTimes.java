@@ -32,7 +32,7 @@ public class WireMockScenarioHttpTimes {
   WireMockHttpResponseSpec response;
   WireMockClient wireMockClient;
 
-  public HttpMock times(int times) {
+  public WireMockHttpMock times(int times) {
     String scenario = UUID.randomUUID().toString();
     var mappings = IntStream.range(0, times)
         .mapToObj(i -> registerStep(scenario, step(i), step(i + 1)))

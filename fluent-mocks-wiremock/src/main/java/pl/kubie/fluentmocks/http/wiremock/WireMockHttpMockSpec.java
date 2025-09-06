@@ -18,18 +18,21 @@ package pl.kubie.fluentmocks.http.wiremock;
 
 import lombok.Value;
 import pl.kubie.fluentmocks.common.JsonSerializer;
-import pl.kubie.fluentmocks.http.api.HttoMockSpec;
+import pl.kubie.fluentmocks.http.api.HttpMockSpec;
 import pl.kubie.fluentmocks.http.api.HttpMockTimes;
 import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
 import pl.kubie.fluentmocks.http.api.response.MockHttpResponseSpec;
 
+import java.util.function.Consumer;
+
 @Value
-public class WireMockHttoMockSpec implements HttoMockSpec {
+public class WireMockHttpMockSpec implements HttpMockSpec {
 
   WireMockHttpRequestSpec request;
   WireMockHttpResponseSpec response;
   WireMockClient wireMock;
   JsonSerializer serializer;
+  Consumer<WireMockHttpMock> onMockCreated;
 
   @Override
   public HttpMockTimes times() {
@@ -37,7 +40,8 @@ public class WireMockHttoMockSpec implements HttoMockSpec {
         request,
         response,
         wireMock,
-        new WireMockStubbingReporter(serializer)
+        new WireMockStubbingReporter(serializer),
+        onMockCreated
     );
   }
 

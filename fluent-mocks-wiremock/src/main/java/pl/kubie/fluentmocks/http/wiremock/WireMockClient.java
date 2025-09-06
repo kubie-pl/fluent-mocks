@@ -22,18 +22,25 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import lombok.extern.slf4j.Slf4j;
+import pl.kubie.fluentmocks.common.JsonSerializer;
+
+import java.util.Collection;
 
 @Slf4j
-public record WireMockClient(String host, int port, WireMock wireMock) {
+public record WireMockClient(
+    String host,
+    int port,
+    WireMock wireMock,
+    JsonSerializer serializer
+) {
 
-  public WireMockClient(String host, int port) {
-    this(host, port, new WireMock(host, port));
-  }
-
-  public void reset() {
-    log.info("Resetting WireMock setup");
-    wireMock.resetRequests();
-    wireMock.resetMappings();
+  public WireMockClient(String host, int port, JsonSerializer serializer) {
+    this(
+        host,
+        port,
+        new WireMock(host, port),
+        serializer
+    );
   }
 
   public StubMapping register(MappingBuilder mappingBuilder) {
@@ -50,4 +57,26 @@ public record WireMockClient(String host, int port, WireMock wireMock) {
     log.info("Verifying that {} requests matching request pattern {}", expectedCount, requestPattern);
     wireMock.verifyThat(expectedCount, requestPattern);
   }
+
+  public void removeAll(Collection<WireMockHttpMock> mocks) {
+    mocks.forEach(mock ->
+        mock.mappings.forEach(mapping -> {
+              log.info("Removing stub mapping {}", mapping.getId());
+              wireMock.removeStubMapping(mapping);
+            }
+        )
+    );
+    /*
+    here we are resetting request journal in wiremock
+    because it is shared between different tests for now it actually prevents to run tests in parallel.
+
+    There are 2 possible solutions to this problem:
+    1. Implement different strategy for matching requests to don't have to reset journal.
+    2. Run separate instance of wiremock for each thread which is executing tests.
+
+    We should decide what how we want to solve it.
+    */
+    wireMock.resetRequests();
+  }
+
 }
