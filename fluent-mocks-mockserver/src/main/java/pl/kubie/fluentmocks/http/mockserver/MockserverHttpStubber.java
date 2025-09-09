@@ -23,6 +23,7 @@ import pl.kubie.fluentmocks.http.api.HttpStubber;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MockserverHttpStubber implements HttpStubber {
 
@@ -30,22 +31,31 @@ public class MockserverHttpStubber implements HttpStubber {
   private final JsonSerializer jsonSerializer;
   private final FileLoader fileReader;
   private final List<MockserverHttpMock> stubs = new ArrayList<>();
+  private final Consumer<HttpMockSpec> onEach;
 
 
-  public MockserverHttpStubber(MockserverApi mockserverApi, JsonSerializer objectMapper, FileLoader fileReader) {
+  public MockserverHttpStubber(
+      MockserverApi mockserverApi,
+      JsonSerializer objectMapper,
+      FileLoader fileReader,
+      Consumer<HttpMockSpec> onEach
+  ) {
     this.mockserverApi = mockserverApi;
     this.jsonSerializer = objectMapper;
     this.fileReader = fileReader;
+    this.onEach = onEach;
   }
 
   @Override
   public HttpMockSpec stub() {
-    return new MockserverHttpMockSpec(
+    var mock = new MockserverHttpMockSpec(
         mockserverApi,
         new MockserverHttpRequestSpec(new MockserverRequestBody(fileReader, jsonSerializer)),
         new MockserverHttpResponseSpec(new MockserverResponseBody(fileReader, jsonSerializer)),
         stubs::add
     );
+    onEach.accept(mock);
+    return mock;
   }
 
   @Override

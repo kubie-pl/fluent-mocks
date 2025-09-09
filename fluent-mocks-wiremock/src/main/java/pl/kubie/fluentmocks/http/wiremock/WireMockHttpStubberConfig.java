@@ -19,12 +19,17 @@ package pl.kubie.fluentmocks.http.wiremock;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import pl.kubie.fluentmocks.common.FileLoader;
 import pl.kubie.fluentmocks.common.JacksonJsonSerializer;
+import pl.kubie.fluentmocks.http.api.HttpMockSpec;
+
+import java.util.function.Consumer;
 
 public class WireMockHttpStubberConfig {
 
   private ObjectMapper objectMapper;
   private String host;
   private int port;
+  private Consumer<HttpMockSpec> onEach = mock -> {
+  };
 
 
   public static WireMockHttpStubberConfig configure() {
@@ -46,12 +51,18 @@ public class WireMockHttpStubberConfig {
     return this;
   }
 
+  public WireMockHttpStubberConfig onEach(Consumer<HttpMockSpec> onEach) {
+    this.onEach = onEach;
+    return this;
+  }
+
   public WireMockHttpStubber build() {
     var serializer = new JacksonJsonSerializer(objectMapper);
     return new WireMockHttpStubber(
         new WireMockClient(host, port, serializer),
         new FileLoader(),
-        serializer
+        serializer,
+        onEach
     );
   }
 

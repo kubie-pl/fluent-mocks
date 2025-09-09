@@ -21,18 +21,50 @@ import lombok.RequiredArgsConstructor;
 import org.mockserver.client.MockServerClient;
 import pl.kubie.fluentmocks.common.FileLoader;
 import pl.kubie.fluentmocks.common.JacksonJsonSerializer;
+import pl.kubie.fluentmocks.http.api.HttpMockSpec;
 import pl.kubie.fluentmocks.http.api.HttpStubber;
+
+import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class MockserverHttpStubberConfig {
 
-  private final ObjectMapper objectMapper;
+  private ObjectMapper objectMapper;
+  private String host;
+  private int port;
+  private Consumer<HttpMockSpec> onEach = mock -> {
+  };
 
-  public HttpStubber stubber(String host, int port) {
+  public MockserverHttpStubberConfig objectMapper(ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+    return this;
+  }
+
+  public MockserverHttpStubberConfig host(String host) {
+    this.host = host;
+    return this;
+  }
+
+  public MockserverHttpStubberConfig port(int port) {
+    this.port = port;
+    return this;
+  }
+
+  public MockserverHttpStubberConfig onEach(Consumer<HttpMockSpec> onEach) {
+    this.onEach = onEach;
+    return this;
+  }
+
+  public static MockserverHttpStubberConfig configure() {
+    return new MockserverHttpStubberConfig();
+  }
+
+  public HttpStubber build() {
     return new MockserverHttpStubber(
         new MockserverApi(new MockServerClient(host, port)),
         new JacksonJsonSerializer(objectMapper),
-        new FileLoader()
+        new FileLoader(),
+        onEach
     );
   }
 }

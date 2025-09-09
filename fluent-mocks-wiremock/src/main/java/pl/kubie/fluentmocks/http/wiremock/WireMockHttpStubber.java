@@ -17,7 +17,6 @@
 package pl.kubie.fluentmocks.http.wiremock;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import lombok.RequiredArgsConstructor;
 import pl.kubie.fluentmocks.common.FileLoader;
 import pl.kubie.fluentmocks.common.JsonSerializer;
@@ -26,6 +25,7 @@ import pl.kubie.fluentmocks.http.api.HttpStubber;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class WireMockHttpStubber implements HttpStubber {
@@ -34,16 +34,19 @@ public class WireMockHttpStubber implements HttpStubber {
   private final FileLoader fileLoader;
   private final JsonSerializer serializer;
   private final List<WireMockHttpMock> mocks = new ArrayList<>();
+  private final Consumer<HttpMockSpec> onEach;
 
   @Override
   public HttpMockSpec stub() {
-    return new WireMockHttpMockSpec(
+    var mock = new WireMockHttpMockSpec(
         new WireMockHttpRequestSpec(new WireMockRequestBody(fileLoader, serializer)),
         new WireMockHttpResponseSpec(new WireMockResponseBody(fileLoader, serializer)),
         wireMockClient,
         serializer,
         mocks::add
     );
+    onEach.accept(mock);
+    return mock;
   }
 
   @Override
@@ -59,7 +62,7 @@ public class WireMockHttpStubber implements HttpStubber {
   @Override
   public void clearMocks() {
     wireMockClient.removeAll(mocks);
-    mocks.clear();;
+    mocks.clear();
   }
 
   @Override

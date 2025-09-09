@@ -136,8 +136,11 @@ public class DirectStubberProvider implements ArgumentsProvider {
 
   private HttpStubber mockserverHttpStubber() {
     log.info("Creating mockserver stubber for port {}", MockContainers.mockserverContainer.getServerPort());
-    return new MockserverHttpStubberConfig(objectMapper)
-        .stubber("localhost", MockContainers.mockserverContainer.getServerPort());
+    return MockserverHttpStubberConfig.configure()
+        .objectMapper(objectMapper)
+        .host("localhost")
+        .port(MockContainers.mockserverContainer.getServerPort())
+        .build();
   }
 
   private HttpStubber wiremockHttpStubber() {
