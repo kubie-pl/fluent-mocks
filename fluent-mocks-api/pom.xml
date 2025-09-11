@@ -11,7 +11,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>21</maven.compiler.release>
   </properties>
-  <name>Fluent Mocks API</name>
+  <name>fluent-mocks-api</name>
+  <description>Fluent API for defining HttpMocks</description>
   <artifactId>fluent-mocks-api</artifactId>
   <build>
     <plugins>

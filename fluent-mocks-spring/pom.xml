@@ -9,7 +9,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-
+  <name>fluent-mocks-spring</name>
+  <description>Spring Framework integration for fluent-mocks</description>
   <artifactId>fluent-mocks-spring</artifactId>
 
   <properties>
