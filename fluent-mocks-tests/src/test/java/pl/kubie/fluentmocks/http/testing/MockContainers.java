@@ -40,14 +40,14 @@ public class MockContainers {
   private static MockServerContainer mockserverContainer() {
     return new MockServerContainer(
         DockerImageName.parse("mockserver/mockserver:latest")
-    )
-        .withLogConsumer(new Slf4jLogConsumer(log));
+    );
+//        .withLogConsumer(new Slf4jLogConsumer(log));
   }
 
   private static WireMockContainer wiremockContainer() {
 
     return new WireMockContainer("wiremock/wiremock:3x")
-        .withLogConsumer(new Slf4jLogConsumer(log))
+//        .withLogConsumer(new Slf4jLogConsumer(log))
         .withBanner();
   }
 
