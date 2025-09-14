@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.kubie</groupId>
   <artifactId>fluent-mocks</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>fluent-mocks</name>
   <description>Fluent API for defining HttpMocks</description>
   <url>https://github.com/kubabieda/fluent-mocks</url>
@@ -376,6 +376,6 @@
     <url>https://github.com/kubie-pl/fluent-mocks</url>
     <connection>scm:git:https://github.com/kubie-pl/fluent-mocks</connection>
     <developerConnection>scm:git:ssh://git@github.com/kubie-pl/fluent-mocks.git</developerConnection>
-    <tag>0.0.1</tag>
+    <tag>0.0.1-SNAPSHOT</tag>
   </scm>
 </project>
