@@ -52,3 +52,15 @@ Add dependency to your pom.xml/build.gradle
         .local(wireMockPort)
         .build();
 ----
+
+== SNAPSHOT versions
+
+To get snapshot versions make sure you are using snapshot repository
+
+[xml]
+----
+<snapshotRepository>
+    <id>central-ossrh</id>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+</snapshotRepository>
+----
