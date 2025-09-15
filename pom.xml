@@ -6,7 +6,7 @@
   <version>0.0.2-SNAPSHOT</version>
   <name>fluent-mocks</name>
   <description>Fluent API for defining HttpMocks</description>
-  <url>https://github.com/kubabieda/fluent-mocks</url>
+  <url>https://github.com/kubie-pl/fluent-mocks</url>
   <packaging>pom</packaging>
   <modules>
     <module>fluent-mocks-api</module>
