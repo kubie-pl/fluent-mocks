@@ -38,6 +38,8 @@ public interface HttpStubber {
 
   void clearMocks();
 
+  HttpVerification verify(Consumer<MockHttpRequestSpec> onRequest);
+
   default String baseUrl() {
     return "http://%s:%s/".formatted(host(), port());
   }

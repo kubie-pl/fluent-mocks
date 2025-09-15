@@ -15,6 +15,10 @@
  */
 package pl.kubie.fluentmocks.http.api;
 
+import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
+
+import java.util.function.Consumer;
+
 public interface HttpVerification {
 
   HttpVerification never();
@@ -29,4 +33,5 @@ public interface HttpVerification {
 
   HttpVerification between(int atLeast, int atMost);
 
+  HttpVerification matching(Consumer<MockHttpRequestSpec> onRequest);
 }
