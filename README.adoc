@@ -1,5 +1,7 @@
 = fluent-mocks
 
+This project is in PoC phase. Currently main focus in on developing expressive fluent API for HTTP mocks definition. There is provided implementation for WireMock and Mockserver adapting to this API, however this is not main concern right now.
+
 == Usage
 
 === Mockserver
