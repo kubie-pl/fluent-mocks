@@ -104,6 +104,7 @@
     <jacoco.version>0.8.13</jacoco.version>
     <jacoco.overall.exec>${maven.multiModuleProjectDirectory}/target/jacoco_analysis/jacoco.exec</jacoco.overall.exec>
     <surefire.argLine />
+    <license.year>2025</license.year>
   </properties>
   <dependencies>
     <dependency>
@@ -359,6 +360,43 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>com.mycila</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>4.5</version>
+        <configuration>
+          <header>${maven.multiModuleProjectDirectory}/license-header.txt</header>
+          <properties>
+            <year>${license.year}</year>
+          </properties>
+          <includes>
+            <include>**/*.java</include>
+          </includes>
+          <excludes>
+            <exclude>**/target/**</exclude>
+            <exclude>**/generated-sources/**</exclude>
+            <exclude>**/generated-test-sources/**</exclude>
+            <exclude>**/.idea/**</exclude>
+          </excludes>
+          <mapping>
+            <java>JAVADOC_STYLE</java>
+            <xml>XML_STYLE</xml>
+            <adoc>ASCIIDOC_STYLE</adoc>
+            <md>MARKDOWN_STYLE</md>
+          </mapping>
+        </configuration>
+        <executions>
+          <execution>
+            <id>license-check</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <distributionManagement>
