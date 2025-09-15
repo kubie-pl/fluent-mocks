@@ -15,13 +15,18 @@
  */
 package pl.kubie.fluentmocks.http.api;
 
-import java.time.Duration;
+public interface HttpVerification {
 
-public interface HttpMock {
+  HttpVerification never();
 
-  HttpVerification verify();
+  HttpVerification once();
 
-  HttpMock await();
+  HttpVerification exactly(int times);
 
-  HttpMock await(Duration timeout);
+  HttpVerification atLeast(int times);
+
+  HttpVerification atMost(int times);
+
+  HttpVerification between(int atLeast, int atMost);
+
 }
