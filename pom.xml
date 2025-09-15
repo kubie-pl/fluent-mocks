@@ -102,7 +102,6 @@
     <rest-assured.version>5.5.5</rest-assured.version>
     <commons-io.version>2.20.0</commons-io.version>
     <jacoco.version>0.8.13</jacoco.version>
-    <jacoco.overall.exec>${maven.multiModuleProjectDirectory}/target/jacoco_analysis/jacoco.exec</jacoco.overall.exec>
     <surefire.argLine />
     <license.year>2025</license.year>
   </properties>
@@ -274,9 +273,6 @@
           </executions>
           <configuration>
             <propertyName>surefire.argLine</propertyName>
-            <destFile>${jacoco.overall.exec}</destFile>
-            <dataFile>${jacoco.overall.exec}</dataFile>
-            <append>true</append>
           </configuration>
         </plugin>
         <plugin>
@@ -361,6 +357,23 @@
       </plugins>
     </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <id>report-aggregate</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report-aggregate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>${maven.multiModuleProjectDirectory}/target/jacoco-aggregate</outputDirectory>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
