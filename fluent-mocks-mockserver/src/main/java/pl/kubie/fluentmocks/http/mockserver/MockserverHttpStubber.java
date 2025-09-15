@@ -15,6 +15,7 @@
  */
 package pl.kubie.fluentmocks.http.mockserver;
 
+import org.jetbrains.annotations.NotNull;
 import pl.kubie.fluentmocks.common.FileLoader;
 import pl.kubie.fluentmocks.common.JsonSerializer;
 import pl.kubie.fluentmocks.http.api.HttpMockSpec;
@@ -49,8 +50,8 @@ public class MockserverHttpStubber implements HttpStubber {
   public HttpMockSpec stub() {
     var mock = new MockserverHttpMockSpec(
         mockserverApi,
-        new MockserverHttpRequestSpec(new MockserverRequestBody(fileReader, jsonSerializer)),
-        new MockserverHttpResponseSpec(new MockserverResponseBody(fileReader, jsonSerializer)),
+        request(),
+        response(),
         stubs::add
     );
     onEach.accept(mock);
@@ -77,5 +78,13 @@ public class MockserverHttpStubber implements HttpStubber {
   @Override
   public String toString() {
     return getClass().getSimpleName();
+  }
+
+  private @NotNull MockserverHttpRequestSpec request() {
+    return new MockserverHttpRequestSpec(new MockserverRequestBody(fileReader, jsonSerializer));
+  }
+
+  private @NotNull MockserverHttpResponseSpec response() {
+    return new MockserverHttpResponseSpec(new MockserverResponseBody(fileReader, jsonSerializer));
   }
 }

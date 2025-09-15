@@ -56,12 +56,13 @@ public class VerificationTest {
         .statusCode(OK_200);
 
     // and
-    mock.verifyOnce();
-    mock.verifyAtLeast(1);
-    mock.verifyAtMost(1);
-    mock.verifyBetween(0, 1);
-    mock.verifyBetween(1, 1);
-    mock.verifyBetween(1, 2);
+    mock.verify()
+        .once()
+        .atLeast(1)
+        .atMost(1)
+        .between(0, 1)
+        .between(1, 1)
+        .between(1, 2);
   }
 
   @StubberTest
@@ -72,10 +73,10 @@ public class VerificationTest {
         .unlimited();
 
     // expect
-    assertThatVerificationFailed(mock::verifyOnce);
-    assertThatVerificationFailed(() -> mock.verifyAtLeast(1));
-    assertThatVerificationFailed(() -> mock.verifyExactly(1));
-    assertThatVerificationFailed(() -> mock.verifyBetween(2, 5));
+    assertThatVerificationFailed(() -> mock.verify().once());
+    assertThatVerificationFailed(() -> mock.verify().atLeast(1));
+    assertThatVerificationFailed(() -> mock.verify().exactly(1));
+    assertThatVerificationFailed(() -> mock.verify().between(2, 5));
 
   }
 
@@ -87,10 +88,11 @@ public class VerificationTest {
         .unlimited();
 
     // expect
-    mock.verifyNever();
-    mock.verifyAtMost(1);
-    mock.verifyExactly(0);
-    mock.verifyBetween(0, 1);
+    mock.verify()
+        .never()
+        .atMost(1)
+        .exactly(0)
+        .between(0, 1);
   }
 
   @StubberTest
@@ -111,17 +113,18 @@ public class VerificationTest {
     );
 
     // then
-    mock.verifyExactly(3);
+    mock.verify()
+        .exactly(3)
 
-    mock.verifyAtMost(3);
-    mock.verifyAtMost(4);
+        .atMost(3)
+        .atMost(4)
 
-    mock.verifyAtLeast(3);
-    mock.verifyAtLeast(2);
+        .atLeast(3)
+        .atLeast(2)
 
-    mock.verifyBetween(3, 3);
-    mock.verifyBetween(2, 3);
-    mock.verifyBetween(3, 4);
+        .between(3, 3)
+        .between(2, 3)
+        .between(3, 4);
   }
 
   @StubberTest
@@ -147,7 +150,7 @@ public class VerificationTest {
 
 
     // expect
-    mock.verifyExactly(2);
+    mock.verify().exactly(2);
   }
 
   @StubberTest
@@ -178,8 +181,8 @@ public class VerificationTest {
         .statusCode(OK_200);
 
     // expect
-    mock1.verifyOnce();
-    mock2.verifyOnce();
+    mock1.verify().once();
+    mock2.verify().once();
 
     // and
     call(stubber)
@@ -217,8 +220,8 @@ public class VerificationTest {
         .assertThat()
         .statusCode(NOT_FOUND_404);
 
-    mock.verifyAtLeast(3);
-    mock.verifyExactly(4);
+    mock.verify().atLeast(3);
+    mock.verify().exactly(4);
   }
 
   @StubberTest
@@ -237,7 +240,7 @@ public class VerificationTest {
         .statusCode(OK_200));
 
     // then
-    assertThatVerificationFailed(() -> mock.verifyAtLeast(3));
+    assertThatVerificationFailed(() -> mock.verify().atLeast(3));
   }
 
   @StubberTest
@@ -255,10 +258,10 @@ public class VerificationTest {
         .assertThat()
         .statusCode(OK_200));
 
-    // then
-    assertThatVerificationFailed(mock::verifyOnce);
-    assertThatVerificationFailed(() -> mock.verifyExactly(4));
-    assertThatVerificationFailed(() -> mock.verifyAtMost(3));
+    // thenx
+    assertThatVerificationFailed(() -> mock.verify().once());
+    assertThatVerificationFailed(() -> mock.verify().exactly(4));
+    assertThatVerificationFailed(() -> mock.verify().atMost(3));
   }
 
   @StubberTest
@@ -283,7 +286,7 @@ public class VerificationTest {
         .assertThat()
         .statusCode(200);
 
-    mock.verifyOnce();
+    mock.verify().once();
   }
 
   @StubberTest
@@ -316,8 +319,12 @@ public class VerificationTest {
         .assertThat()
         .statusCode(404);
 
-    mock.verifyAtLeast(1);
-    mock.verifyExactly(2);
+    mock.verify().atLeast(1);
+    mock.verify().exactly(2);
+
+    mock.verify()
+        .atLeast(1)
+        .exactly(2);
 
   }
 
@@ -351,8 +358,9 @@ public class VerificationTest {
         .assertThat()
         .statusCode(404);
 
-    mock.verifyAtLeast(1);
-    mock.verifyExactly(2);
+    mock.verify()
+        .atLeast(1)
+        .exactly(2);
   }
 
   @StubberTest
@@ -371,7 +379,9 @@ public class VerificationTest {
         .statusCode(OK_200);
 
     // then
-    mock.await().verifyOnce();
+    mock.await()
+        .verify()
+        .once();
   }
 
 }

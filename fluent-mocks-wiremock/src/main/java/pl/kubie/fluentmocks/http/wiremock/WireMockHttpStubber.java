@@ -17,6 +17,7 @@ package pl.kubie.fluentmocks.http.wiremock;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import pl.kubie.fluentmocks.common.FileLoader;
 import pl.kubie.fluentmocks.common.JsonSerializer;
 import pl.kubie.fluentmocks.http.api.HttpMockSpec;
@@ -38,14 +39,22 @@ public class WireMockHttpStubber implements HttpStubber {
   @Override
   public HttpMockSpec stub() {
     var mock = new WireMockHttpMockSpec(
-        new WireMockHttpRequestSpec(new WireMockRequestBody(fileLoader, serializer)),
-        new WireMockHttpResponseSpec(new WireMockResponseBody(fileLoader, serializer)),
+        request(),
+        response(),
         wireMockClient,
         serializer,
         mocks::add
     );
     onEach.accept(mock);
     return mock;
+  }
+
+  private @NotNull WireMockHttpResponseSpec response() {
+    return new WireMockHttpResponseSpec(new WireMockResponseBody(fileLoader, serializer));
+  }
+
+  private @NotNull WireMockHttpRequestSpec request() {
+    return new WireMockHttpRequestSpec(new WireMockRequestBody(fileLoader, serializer));
   }
 
   @Override

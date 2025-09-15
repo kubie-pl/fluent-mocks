@@ -16,21 +16,17 @@
 package pl.kubie.fluentmocks.http.wiremock;
 
 import com.github.tomakehurst.wiremock.client.CountMatchingStrategy;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import org.awaitility.Awaitility;
 import org.awaitility.core.ThrowingRunnable;
 import pl.kubie.fluentmocks.http.api.HttpMock;
-import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
+import pl.kubie.fluentmocks.http.api.HttpVerification;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.function.Consumer;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
-import static com.github.tomakehurst.wiremock.client.WireMock.lessThanOrExactly;
-import static com.github.tomakehurst.wiremock.client.WireMock.moreThanOrExactly;
-
-public class WireMockHttpMock implements HttpMock {
+public class WireMockHttpMock implements HttpMock, HttpVerification {
 
   WireMockHttpRequestSpec request;
   WireMockClient wireMockClient;
@@ -59,43 +55,36 @@ public class WireMockHttpMock implements HttpMock {
   }
 
   @Override
-  public void verifyNever() {
-    verifyExactly(0);
+  public HttpVerification never() {
+    return verify(WireMock.exactly(0));
   }
 
   @Override
-  public void verifyOnce() {
-    verifyExactly(1);
+  public HttpVerification once() {
+    return verify(WireMock.exactly(1));
   }
 
   @Override
-  public void verifyExactly(int times) {
-    verify(exactly(times));
+  public HttpVerification exactly(int times) {
+    return verify(WireMock.exactly(times));
   }
 
   @Override
-  public void verifyAtLeast(int times) {
-    verify(moreThanOrExactly(times));
+  public HttpVerification atLeast(int times) {
+    return verify(WireMock.moreThanOrExactly(times));
   }
 
   @Override
-  public void verifyAtMost(int times) {
-    verify(lessThanOrExactly(times));
+  public HttpVerification atMost(int times) {
+    return verify(WireMock.lessThanOrExactly(times));
   }
 
   @Override
-  public void verifyBetween(int atLeast, int atMost) {
-    verifyAtLeast(atLeast);
-    verifyAtMost(atMost);
+  public HttpVerification between(int atLeast, int atMost) {
+    return atLeast(atLeast).atMost(atMost);
   }
 
-  @Override
-  public HttpMock verifyWith(Consumer<MockHttpRequestSpec> onRequest) {
-    onRequest.accept(request);
-    return this;
-  }
-
-  private void verify(CountMatchingStrategy expectedCount) {
+  private HttpVerification verify(CountMatchingStrategy expectedCount) {
     ThrowingRunnable verification = () -> wireMockClient.verifyThat(expectedCount, request.pattern());
     if (awaitTimeout != null) {
       Awaitility.await()
@@ -108,6 +97,11 @@ public class WireMockHttpMock implements HttpMock {
         throw new AssertionError(throwable);
       }
     }
+    return this;
   }
 
+  @Override
+  public HttpVerification verify() {
+    return this;
+  }
 }

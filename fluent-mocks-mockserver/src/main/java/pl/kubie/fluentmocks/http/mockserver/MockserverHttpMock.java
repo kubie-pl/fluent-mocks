@@ -19,18 +19,11 @@ import org.awaitility.Awaitility;
 import org.awaitility.core.ThrowingRunnable;
 import org.mockserver.verify.VerificationTimes;
 import pl.kubie.fluentmocks.http.api.HttpMock;
-import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
+import pl.kubie.fluentmocks.http.api.HttpVerification;
 
 import java.time.Duration;
-import java.util.function.Consumer;
 
-import static org.mockserver.verify.VerificationTimes.atLeast;
-import static org.mockserver.verify.VerificationTimes.atMost;
-import static org.mockserver.verify.VerificationTimes.between;
-import static org.mockserver.verify.VerificationTimes.exactly;
-import static org.mockserver.verify.VerificationTimes.once;
-
-public class MockserverHttpMock implements HttpMock {
+public class MockserverHttpMock implements HttpMock, HttpVerification {
 
   MockserverApi mockserverApi;
   MockserverHttpRequestSpec requestSpec;
@@ -59,43 +52,43 @@ public class MockserverHttpMock implements HttpMock {
   }
 
   @Override
-  public void verifyNever() {
-    verify(VerificationTimes.never());
+  public HttpVerification never() {
+    return verify(VerificationTimes.never());
   }
 
   @Override
-  public void verifyOnce() {
-    verify(once());
+  public HttpVerification once() {
+    return verify(VerificationTimes.once());
   }
 
   @Override
-  public void verifyExactly(int times) {
-    verify(exactly(times));
+  public HttpVerification exactly(int times) {
+    return verify(VerificationTimes.exactly(times));
   }
 
   @Override
-  public void verifyAtLeast(int times) {
-    verify(atLeast(times));
+  public HttpVerification atLeast(int times) {
+    return verify(VerificationTimes.atLeast(times));
   }
 
   @Override
-  public void verifyAtMost(int times) {
-    verify(atMost(times));
+  public HttpVerification atMost(int times) {
+    return verify(VerificationTimes.atMost(times));
   }
 
   @Override
-  public void verifyBetween(int atLeast, int atMost) {
-    verify(between(atLeast, atMost));
+  public HttpVerification between(int atLeast, int atMost) {
+    return verify(VerificationTimes.between(atLeast, atMost));
   }
 
   @Override
-  public HttpMock verifyWith(Consumer<MockHttpRequestSpec> onRequest) {
-    onRequest.accept(requestSpec);
+  public HttpVerification verify() {
     return this;
   }
 
-  private void verify(VerificationTimes times) {
+  private HttpVerification verify(VerificationTimes times) {
     execute(() -> mockserverApi.verify(requestSpec, times));
+    return this;
   }
 
   private void execute(ThrowingRunnable assertion) {

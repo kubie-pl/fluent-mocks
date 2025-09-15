@@ -15,28 +15,13 @@
  */
 package pl.kubie.fluentmocks.http.api;
 
-import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
-
 import java.time.Duration;
-import java.util.function.Consumer;
 
 public interface HttpMock {
 
+  HttpVerification verify();
+
   HttpMock await();
 
-  HttpMock await(Duration polling);
-
-  void verifyNever();
-
-  void verifyOnce();
-
-  void verifyExactly(int times);
-
-  void verifyAtLeast(int times);
-
-  void verifyAtMost(int times);
-
-  void verifyBetween(int atLeast, int atMost);
-
-  HttpMock verifyWith(Consumer<MockHttpRequestSpec> onRequest);
+  HttpMock await(Duration timeout);
 }
