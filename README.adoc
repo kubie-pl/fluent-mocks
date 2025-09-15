@@ -1,1 +1,54 @@
 = fluent-mocks
+
+== Usage
+
+=== Mockserver
+
+==== Dependency
+
+Add dependency to your pom.xml/build.gradle
+
+[xml]
+----
+<dependency>
+    <groupId>pl.kubie</groupId>
+    <artifactId>fluent-mocks-mockserver</artifactId>
+    <version>0.0.1</version>
+</dependency>
+----
+
+==== Set up stubber with config class
+
+[java]
+----
+    MockserverHttpStubberConfig.configure()
+        .objectMapper(objectMapper)
+        .host("localhost")
+        .port(mockserverPort)
+        .build()
+----
+
+=== WireMock
+
+Add dependency to your pom.xml/build.gradle
+
+==== Dependency
+
+[xml]
+----
+<dependency>
+    <groupId>pl.kubie</groupId>
+    <artifactId>fluent-mocks-wiremock</artifactId>
+    <version>0.0.1</version>
+</dependency>
+----
+
+==== Set up stubber with config class
+
+[java]
+----
+    WireMockHttpStubberConfig.configure()
+        .objectMapper(objectMapper)
+        .local(wireMockPort)
+        .build();
+----
