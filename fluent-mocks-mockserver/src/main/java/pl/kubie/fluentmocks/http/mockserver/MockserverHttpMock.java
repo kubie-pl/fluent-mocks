@@ -1,17 +1,17 @@
 /**
- *    Copyright 2025 the original author or authors
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2025 the original author or authors
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package pl.kubie.fluentmocks.http.mockserver;
 
@@ -20,8 +20,10 @@ import org.awaitility.core.ThrowingRunnable;
 import org.mockserver.verify.VerificationTimes;
 import pl.kubie.fluentmocks.http.api.HttpMock;
 import pl.kubie.fluentmocks.http.api.HttpVerification;
+import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
 
 import java.time.Duration;
+import java.util.function.Consumer;
 
 public class MockserverHttpMock implements HttpMock, HttpVerification {
 
@@ -79,6 +81,12 @@ public class MockserverHttpMock implements HttpMock, HttpVerification {
   @Override
   public HttpVerification between(int atLeast, int atMost) {
     return verify(VerificationTimes.between(atLeast, atMost));
+  }
+
+  @Override
+  public HttpVerification matching(Consumer<MockHttpRequestSpec> onRequest) {
+    onRequest.accept(requestSpec);
+    return this;
   }
 
   @Override

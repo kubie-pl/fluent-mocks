@@ -22,9 +22,11 @@ import org.awaitility.Awaitility;
 import org.awaitility.core.ThrowingRunnable;
 import pl.kubie.fluentmocks.http.api.HttpMock;
 import pl.kubie.fluentmocks.http.api.HttpVerification;
+import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class WireMockHttpMock implements HttpMock, HttpVerification {
 
@@ -82,6 +84,12 @@ public class WireMockHttpMock implements HttpMock, HttpVerification {
   @Override
   public HttpVerification between(int atLeast, int atMost) {
     return atLeast(atLeast).atMost(atMost);
+  }
+
+  @Override
+  public HttpVerification matching(Consumer<MockHttpRequestSpec> onRequest) {
+    onRequest.accept(request);
+    return this;
   }
 
   private HttpVerification verify(CountMatchingStrategy expectedCount) {
