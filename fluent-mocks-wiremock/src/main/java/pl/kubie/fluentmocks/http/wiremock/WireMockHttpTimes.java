@@ -36,7 +36,7 @@ public class WireMockHttpTimes implements HttpMockTimes {
     var responseDefinition = response.build();
     var mapping = wireMock.register(requestMapping.willReturn(responseDefinition));
     reporter.report(mapping);
-    var mock = new WireMockHttpMock(request.requestPattern(), List.of(mapping), wireMock);
+    var mock = new WireMockHttpMock(request, List.of(mapping), wireMock);
     onMockCreated.accept(mock);
     return mock;
   }

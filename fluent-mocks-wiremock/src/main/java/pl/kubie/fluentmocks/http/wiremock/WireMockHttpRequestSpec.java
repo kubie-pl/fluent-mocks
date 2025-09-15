@@ -90,7 +90,7 @@ public class WireMockHttpRequestSpec implements MockHttpRequestSpec {
     return request;
   }
 
-  public RequestPatternBuilder requestPattern() {
+  public RequestPatternBuilder pattern() {
     var pattern = newRequestPattern(fromString(method), urlPathTemplate(url.asString()));
     url.pathParams().forEach(entry -> pattern.withPathParam(entry.getKey(), WireMock.equalTo(entry.getValue())));
     headers.forEach((header, values) -> pattern.withHeader(header, WireMock.equalTo(values.getFirst()))); // todo fix for current wiremock

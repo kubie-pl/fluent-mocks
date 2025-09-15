@@ -16,14 +16,15 @@
 package pl.kubie.fluentmocks.http.wiremock;
 
 import com.github.tomakehurst.wiremock.client.CountMatchingStrategy;
-import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import org.awaitility.Awaitility;
 import org.awaitility.core.ThrowingRunnable;
 import pl.kubie.fluentmocks.http.api.HttpMock;
+import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.exactly;
 import static com.github.tomakehurst.wiremock.client.WireMock.lessThanOrExactly;
@@ -31,19 +32,19 @@ import static com.github.tomakehurst.wiremock.client.WireMock.moreThanOrExactly;
 
 public class WireMockHttpMock implements HttpMock {
 
+  WireMockHttpRequestSpec request;
   WireMockClient wireMockClient;
-  RequestPatternBuilder requestPattern;
   List<StubMapping> mappings;
   Duration awaitTimeout = null;
 
   public WireMockHttpMock(
-      RequestPatternBuilder requestPattern,
+      WireMockHttpRequestSpec request,
       List<StubMapping> mappings,
       WireMockClient wireMockClient
   ) {
-    this.requestPattern = requestPattern;
     this.mappings = mappings;
     this.wireMockClient = wireMockClient;
+    this.request = request;
   }
 
   @Override
@@ -88,8 +89,14 @@ public class WireMockHttpMock implements HttpMock {
     verifyAtMost(atMost);
   }
 
+  @Override
+  public HttpMock verifyWith(Consumer<MockHttpRequestSpec> onRequest) {
+    onRequest.accept(request);
+    return this;
+  }
+
   private void verify(CountMatchingStrategy expectedCount) {
-    ThrowingRunnable verification = () -> wireMockClient.verifyThat(expectedCount, requestPattern);
+    ThrowingRunnable verification = () -> wireMockClient.verifyThat(expectedCount, request.pattern());
     if (awaitTimeout != null) {
       Awaitility.await()
           .atMost(awaitTimeout)

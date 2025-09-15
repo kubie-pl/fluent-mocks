@@ -17,7 +17,6 @@ package pl.kubie.fluentmocks.http.wiremock;
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import lombok.Value;
-import pl.kubie.fluentmocks.http.api.HttpMock;
 
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -39,7 +38,7 @@ public class WireMockScenarioHttpTimes {
     var finalMapping = registerFinalStep(scenario, step(times));
     wireMockClient.setSingleScenarioState(scenario, "step-0");
     return new WireMockHttpMock(
-        request.requestPattern(),
+        request,
         Stream.concat(mappings.stream(), Stream.of(finalMapping)).toList(),
         wireMockClient
     );
