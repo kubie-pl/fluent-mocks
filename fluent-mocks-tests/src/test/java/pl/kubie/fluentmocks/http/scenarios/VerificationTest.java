@@ -386,7 +386,7 @@ public class VerificationTest {
   }
 
   @StubberTest
-  void should_report_near_misses_if_verification_failed(HttpStubber stubber) {
+  void should_throw_native_assertion_error_with_expectation_when_verification_fails(HttpStubber stubber) {
     // given
     var mock = stubber.with(stubGetEndpoint())
         .when(request -> request.url(url -> url.queryParameter("foo", "bar")))
@@ -401,7 +401,10 @@ public class VerificationTest {
         .assertThat()
         .statusCode(404);
 
-    assertThatThrownBy(() -> mock.verify().once()).isNotNull();
+    assertThatThrownBy(() -> mock.verify().once())
+        .isNotNull()
+        .isInstanceOf(AssertionError.class)
+        .hasMessageContainingAll("foo", "bar", "baz");
   }
 
 }
