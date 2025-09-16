@@ -10,7 +10,7 @@ This project is in PoC phase. Currently main focus in on developing expressive f
 
 Add dependency to your pom.xml/build.gradle
 
-[xml]
+[source,xml]
 ----
 <dependency>
     <groupId>pl.kubie</groupId>
@@ -21,7 +21,7 @@ Add dependency to your pom.xml/build.gradle
 
 ==== Set up stubber with config class
 
-[java]
+[source,java]
 ----
     MockserverHttpStubberConfig.configure()
         .objectMapper(objectMapper)
@@ -36,7 +36,7 @@ Add dependency to your pom.xml/build.gradle
 
 ==== Dependency
 
-[xml]
+[source,xml]
 ----
 <dependency>
     <groupId>pl.kubie</groupId>
@@ -47,7 +47,7 @@ Add dependency to your pom.xml/build.gradle
 
 ==== Set up stubber with config class
 
-[java]
+[source,java]
 ----
     WireMockHttpStubberConfig.configure()
         .objectMapper(objectMapper)
@@ -59,7 +59,7 @@ Add dependency to your pom.xml/build.gradle
 
 To get snapshot versions make sure you are using snapshot repository
 
-[xml]
+[source,xml]
 ----
 <snapshotRepository>
     <id>central-ossrh</id>
