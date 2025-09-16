@@ -22,6 +22,8 @@ import pl.kubie.fluentmocks.common.FileLoader;
 import pl.kubie.fluentmocks.common.JsonSerializer;
 import pl.kubie.fluentmocks.http.api.HttpMockSpec;
 import pl.kubie.fluentmocks.http.api.HttpStubber;
+import pl.kubie.fluentmocks.http.api.HttpVerification;
+import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +73,13 @@ public class WireMockHttpStubber implements HttpStubber {
   public void clearMocks() {
     wireMockClient.removeAll(mocks);
     mocks.clear();
+  }
+
+  @Override
+  public HttpVerification verify(Consumer<MockHttpRequestSpec> onRequest) {
+    var request = request();
+    onRequest.accept(request);
+    return new WireMockHttpMock(request, List.of(), wireMockClient);
   }
 
   @Override

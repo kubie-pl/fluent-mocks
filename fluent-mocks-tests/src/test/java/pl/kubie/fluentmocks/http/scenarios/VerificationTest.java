@@ -258,7 +258,7 @@ public class VerificationTest {
         .assertThat()
         .statusCode(OK_200));
 
-    // thenx
+    // then
     assertThatVerificationFailed(() -> mock.verify().once());
     assertThatVerificationFailed(() -> mock.verify().exactly(4));
     assertThatVerificationFailed(() -> mock.verify().atMost(3));
@@ -318,9 +318,6 @@ public class VerificationTest {
         .then()
         .assertThat()
         .statusCode(404);
-
-    mock.verify().atLeast(1);
-    mock.verify().exactly(2);
 
     mock.verify()
         .atLeast(1)
@@ -382,6 +379,33 @@ public class VerificationTest {
     mock.await()
         .verify()
         .once();
+  }
+
+  @StubberTest
+  void verification_should_pass_when_verifying_through_stubber_directly(HttpStubber stubber) {
+    // given
+    stubber.with(stubGetEndpoint())
+        .respond()
+        .unlimited();
+
+    // when
+    call(stubber)
+        .when()
+        .get(TEST_URL)
+        .then()
+        .assertThat()
+        .statusCode(OK_200);
+
+    // then
+    stubber.verify(request -> request.url(TEST_URL))
+        .once()
+        .atLeast(0)
+        .atLeast(1)
+        .atMost(1)
+        .atMost(2)
+        .between(0, 1)
+        .between(1, 1)
+        .between(1, 2);
   }
 
 }

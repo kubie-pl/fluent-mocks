@@ -20,8 +20,10 @@ import org.awaitility.core.ThrowingRunnable;
 import org.mockserver.verify.VerificationTimes;
 import pl.kubie.fluentmocks.http.api.HttpMock;
 import pl.kubie.fluentmocks.http.api.HttpVerification;
+import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
 
 import java.time.Duration;
+import java.util.function.Consumer;
 
 public class MockserverHttpMock implements HttpMock, HttpVerification {
 
@@ -79,6 +81,12 @@ public class MockserverHttpMock implements HttpMock, HttpVerification {
   @Override
   public HttpVerification between(int atLeast, int atMost) {
     return verify(VerificationTimes.between(atLeast, atMost));
+  }
+
+  @Override
+  public HttpVerification matching(Consumer<MockHttpRequestSpec> onRequest) {
+    onRequest.accept(requestSpec);
+    return this;
   }
 
   @Override

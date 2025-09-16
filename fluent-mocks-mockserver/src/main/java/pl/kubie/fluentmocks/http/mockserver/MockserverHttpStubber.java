@@ -20,6 +20,8 @@ import pl.kubie.fluentmocks.common.FileLoader;
 import pl.kubie.fluentmocks.common.JsonSerializer;
 import pl.kubie.fluentmocks.http.api.HttpMockSpec;
 import pl.kubie.fluentmocks.http.api.HttpStubber;
+import pl.kubie.fluentmocks.http.api.HttpVerification;
+import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +75,13 @@ public class MockserverHttpStubber implements HttpStubber {
     stubs.forEach(stub -> mockserverApi.clear(stub.requestSpec.build()));
     mockserverApi.reset(); // todo it's possible bug in mockserver that it doesn't reset request logs
     stubs.clear();
+  }
+
+  @Override
+  public HttpVerification verify(Consumer<MockHttpRequestSpec> onRequest) {
+    var request = request();
+    onRequest.accept(request);
+    return new MockserverHttpMock(mockserverApi, request, new MockserverExpectations(null));
   }
 
   @Override
