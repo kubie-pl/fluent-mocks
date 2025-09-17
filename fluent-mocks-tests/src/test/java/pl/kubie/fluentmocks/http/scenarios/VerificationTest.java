@@ -21,6 +21,7 @@ import pl.kubie.fluentmocks.http.testing.Parameter;
 import pl.kubie.fluentmocks.http.testing.StubberTest;
 import pl.kubie.fluentmocks.http.testing.Times;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static pl.kubie.fluentmocks.http.scenarios.TestStubbing.stubGetEndpoint;
 import static pl.kubie.fluentmocks.http.scenarios.TestStubbing.stubPostEndpoint;
 import static pl.kubie.fluentmocks.http.testing.Constants.NOT_FOUND_404;
@@ -382,6 +383,28 @@ public class VerificationTest {
     mock.await()
         .verify()
         .once();
+  }
+
+  @StubberTest
+  void should_throw_native_assertion_error_with_expectation_when_verification_fails(HttpStubber stubber) {
+    // given
+    var mock = stubber.with(stubGetEndpoint())
+        .when(request -> request.url(url -> url.queryParameter("foo", "bar")))
+        .respond()
+        .once();
+
+    // when
+    call(stubber)
+        .queryParam("foo", "baz")
+        .get("/test")
+        .then()
+        .assertThat()
+        .statusCode(404);
+
+    assertThatThrownBy(() -> mock.verify().once())
+        .isNotNull()
+        .isInstanceOf(AssertionError.class)
+        .hasMessageContainingAll("foo", "bar", "baz");
   }
 
 }

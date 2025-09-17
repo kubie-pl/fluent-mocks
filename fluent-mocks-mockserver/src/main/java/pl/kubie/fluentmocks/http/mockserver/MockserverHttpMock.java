@@ -16,8 +16,8 @@
 package pl.kubie.fluentmocks.http.mockserver;
 
 import org.awaitility.Awaitility;
-import org.awaitility.core.ThrowingRunnable;
 import org.mockserver.verify.VerificationTimes;
+import pl.kubie.fluentmocks.common.ThrowingRunnable;
 import pl.kubie.fluentmocks.http.api.HttpMock;
 import pl.kubie.fluentmocks.http.api.HttpVerification;
 
@@ -95,13 +95,9 @@ public class MockserverHttpMock implements HttpMock, HttpVerification {
     if (shouldAwait()) {
       Awaitility.await()
           .atMost(awaitTimeout)
-          .untilAsserted(assertion);
+          .untilAsserted(assertion::run);
     } else {
-      try {
-        assertion.run();
-      } catch (Throwable throwable) {
-        throw new RuntimeException(throwable);
-      }
+      assertion.run();
     }
   }
 

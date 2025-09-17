@@ -19,7 +19,7 @@ import com.github.tomakehurst.wiremock.client.CountMatchingStrategy;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import org.awaitility.Awaitility;
-import org.awaitility.core.ThrowingRunnable;
+import pl.kubie.fluentmocks.common.ThrowingRunnable;
 import pl.kubie.fluentmocks.http.api.HttpMock;
 import pl.kubie.fluentmocks.http.api.HttpVerification;
 
@@ -89,13 +89,9 @@ public class WireMockHttpMock implements HttpMock, HttpVerification {
     if (awaitTimeout != null) {
       Awaitility.await()
           .atMost(awaitTimeout)
-          .untilAsserted(verification);
+          .untilAsserted(verification::run);
     } else {
-      try {
-        verification.run();
-      } catch (Throwable throwable) {
-        throw new AssertionError(throwable);
-      }
+      verification.run();
     }
     return this;
   }
