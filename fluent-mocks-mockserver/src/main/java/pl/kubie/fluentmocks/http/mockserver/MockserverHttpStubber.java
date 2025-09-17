@@ -71,7 +71,7 @@ public class MockserverHttpStubber implements HttpStubber {
   @Override
   public void clearMocks() {
     stubs.forEach(stub -> mockserverApi.clear(stub.requestSpec.build()));
-    mockserverApi.reset(); // todo it's possible bug in mockserver that it doesn't reset request logs
+    mockserverApi.reset();
     stubs.clear();
   }
 

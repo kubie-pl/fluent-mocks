@@ -18,7 +18,10 @@ package pl.kubie.fluentmocks.http.wiremock;
 
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.matching.ExactMatchMultiValuePattern;
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
+import com.github.tomakehurst.wiremock.matching.StringValuePattern;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.MultiValueMapAdapter;
 import pl.kubie.fluentmocks.http.api.request.MockHttpRequestSpec;
@@ -26,12 +29,16 @@ import pl.kubie.fluentmocks.http.api.request.RequestBody;
 import pl.kubie.fluentmocks.http.api.request.UrlSpec;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathTemplate;
 import static com.github.tomakehurst.wiremock.http.RequestMethod.fromString;
 import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 public class WireMockHttpRequestSpec implements MockHttpRequestSpec {
 
@@ -83,9 +90,9 @@ public class WireMockHttpRequestSpec implements MockHttpRequestSpec {
   public MappingBuilder mapping() {
     var request = WireMock.request(method, urlPathTemplate(url.asString()));
     url.pathParams().forEach(entry -> request.withPathParam(entry.getKey(), WireMock.equalTo(entry.getValue())));
-    headers.forEach((header, values) -> request.withHeader(header, WireMock.equalTo(values.getFirst()))); // todo fix for current wiremock
+    headers.forEach((header, values) -> request.withHeader(header, exactMatch(values, WireMock::equalTo)));
     cookies.forEach((cookie, value) -> request.withCookie(cookie, WireMock.equalTo(value)));
-    url.getQueryParams().forEach((param, values) -> request.withQueryParam(param, WireMock.equalTo(values.getFirst()))); // todo fix for current wiremock
+    url.getQueryParams().forEach((param, values) -> request.withQueryParam(param, exactMatch(values, WireMock::equalTo)));
     body.toContentPattern().ifPresent(request::withRequestBody);
     return request;
   }
@@ -93,10 +100,19 @@ public class WireMockHttpRequestSpec implements MockHttpRequestSpec {
   public RequestPatternBuilder pattern() {
     var pattern = newRequestPattern(fromString(method), urlPathTemplate(url.asString()));
     url.pathParams().forEach(entry -> pattern.withPathParam(entry.getKey(), WireMock.equalTo(entry.getValue())));
-    headers.forEach((header, values) -> pattern.withHeader(header, WireMock.equalTo(values.getFirst()))); // todo fix for current wiremock
+    headers.forEach((header, values) -> pattern.withHeader(header, exactMatch(values, WireMock::equalTo)));
     cookies.forEach((cookie, value) -> pattern.withCookie(cookie, WireMock.equalTo(value)));
-    url.getQueryParams().forEach((param, values) -> pattern.withQueryParam(param, WireMock.equalTo(values.getFirst()))); // todo fix for current wiremock
+    url.getQueryParams().forEach((param, values) -> pattern.withQueryParam(param, exactMatch(values, WireMock::equalTo)));
     body.toContentPattern().ifPresent(pattern::withRequestBody);
     return pattern;
+  }
+
+  private static @NotNull ExactMatchMultiValuePattern exactMatch(
+      List<String> values,
+      Function<String, StringValuePattern> patternFactory
+  ) {
+    return values.stream()
+        .map(patternFactory)
+        .collect(collectingAndThen(toList(), ExactMatchMultiValuePattern::new));
   }
 }
